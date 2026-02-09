@@ -1,0 +1,30 @@
+# Core
+httpx>=0.27.0
+aiohttp>=3.9.0
+beautifulsoup4>=4.12.0
+lxml>=5.0.0
+pydantic>=2.5.0
+
+# Browser automation
+playwright>=1.40.0
+crawl4ai>=0.4.0
+
+# Stealth & anti-bot
+fake-useragent>=1.4.0
+
+# Platform-specific
+yt-dlp>=2024.1.0
+praw>=7.7.0
+atproto>=0.0.46
+telethon>=1.34.0
+
+# Export & storage
+pandas>=2.1.0
+
+# Rate limiting & retry
+tenacity>=8.2.0
+aiolimiter>=1.1.0
+
+# CLI
+click>=8.1.0
+rich>=13.7.0
