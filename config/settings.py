@@ -105,56 +105,6 @@ PLATFORMS = {
         "class": "RumbleScraper",
         "rate_limit": 1.0,
     },
-    "vk": {
-        "module": "scrapers.vk",
-        "class": "VKScraper",
-        "rate_limit": 3.0,
-    },
-    "weibo": {
-        "module": "scrapers.weibo",
-        "class": "WeiboScraper",
-        "rate_limit": 0.5,
-    },
-    "truthsocial": {
-        "module": "scrapers.truthsocial",
-        "class": "TruthSocialScraper",
-        "rate_limit": 2.0,
-    },
-    "producthunt": {
-        "module": "scrapers.producthunt",
-        "class": "ProductHuntScraper",
-        "rate_limit": 1.0,
-    },
-    "dribbble": {
-        "module": "scrapers.dribbble",
-        "class": "DribbbleScraper",
-        "rate_limit": 1.0,
-    },
-    "deviantart": {
-        "module": "scrapers.deviantart",
-        "class": "DeviantArtScraper",
-        "rate_limit": 1.0,
-    },
-    "flickr": {
-        "module": "scrapers.flickr",
-        "class": "FlickrScraper",
-        "rate_limit": 2.0,
-    },
-    "soundcloud": {
-        "module": "scrapers.soundcloud",
-        "class": "SoundCloudScraper",
-        "rate_limit": 1.0,
-    },
-    "lemon8": {
-        "module": "scrapers.lemon8",
-        "class": "Lemon8Scraper",
-        "rate_limit": 0.5,
-    },
-    "nextdoor": {
-        "module": "scrapers.nextdoor",
-        "class": "NextdoorScraper",
-        "rate_limit": 0.3,
-    },
 }
 
 
