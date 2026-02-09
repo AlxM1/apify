@@ -122,13 +122,16 @@ class BaseScraper(ABC):
                 "Accept-Language": "en-US,en;q=0.9",
                 **self.config.custom_headers,
             }
-            proxy = self.config.proxy
-            self._client = httpx.AsyncClient(
-                headers=headers,
-                timeout=self.config.timeout,
-                proxy=proxy,
-                follow_redirects=True,
-            )
+            client_kwargs = {
+                "headers": headers,
+                "timeout": self.config.timeout,
+                "follow_redirects": True,
+            }
+            # Only set proxy if explicitly configured; avoid inheriting
+            # system HTTP_PROXY env vars that may interfere.
+            if self.config.proxy:
+                client_kwargs["proxy"] = self.config.proxy
+            self._client = httpx.AsyncClient(**client_kwargs)
         return self._client
 
     async def fetch(self, url: str, **kwargs) -> httpx.Response:

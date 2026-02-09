@@ -56,13 +56,15 @@ class StealthSession:
         self, proxy: str | None = None, timeout: int = 30
     ) -> httpx.AsyncClient:
         """Create an httpx client with stealth headers."""
-        return httpx.AsyncClient(
-            headers=self.get_headers(),
-            timeout=timeout,
-            proxy=proxy,
-            follow_redirects=True,
-            http2=True,
-        )
+        kwargs = {
+            "headers": self.get_headers(),
+            "timeout": timeout,
+            "follow_redirects": True,
+            "http2": True,
+        }
+        if proxy:
+            kwargs["proxy"] = proxy
+        return httpx.AsyncClient(**kwargs)
 
     @staticmethod
     async def playwright_stealth_config() -> dict:
