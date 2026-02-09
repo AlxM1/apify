@@ -35,3 +35,11 @@ uvicorn>=0.30.0
 sqlalchemy[asyncio]>=2.0.0
 aiosqlite>=0.20.0
 python-multipart>=0.0.9
+
+# Config & auth
+pydantic-settings>=2.0.0
+
+# Scheduler & rate limiting
+croniter>=1.4.0
+slowapi>=0.1.9
+websockets>=12.0

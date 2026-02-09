@@ -7,6 +7,7 @@ from sqlalchemy import func, select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from api.auth import require_auth
 from api.database import get_db
 from api.models import JobStatus, ScrapeJob, ScrapeResult
 from api.schemas import (
@@ -22,7 +23,7 @@ router = APIRouter(prefix="/api/scrapes", tags=["scrapes"])
 
 
 @router.post("", response_model=JobResponse, status_code=201)
-async def create_scrape(req: ScrapeRequest, db: AsyncSession = Depends(get_db)):
+async def create_scrape(req: ScrapeRequest, db: AsyncSession = Depends(get_db), _auth: str = Depends(require_auth)):
     """Launch a new scrape job."""
     if req.platform not in PLATFORMS:
         raise HTTPException(400, f"Unknown platform: {req.platform}")
@@ -85,7 +86,7 @@ async def get_scrape(job_id: int, db: AsyncSession = Depends(get_db)):
 
 
 @router.delete("/{job_id}")
-async def delete_scrape(job_id: int, db: AsyncSession = Depends(get_db)):
+async def delete_scrape(job_id: int, db: AsyncSession = Depends(get_db), _auth: str = Depends(require_auth)):
     """Delete a scrape job and its results."""
     job = await db.get(ScrapeJob, job_id)
     if not job:

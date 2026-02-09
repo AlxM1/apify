@@ -6,6 +6,7 @@ import Jobs from './pages/Jobs';
 import JobDetail from './pages/JobDetail';
 import Results from './pages/Results';
 import Platforms from './pages/Platforms';
+import Schedules from './pages/Schedules';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="/jobs/:id" element={<JobDetail />} />
           <Route path="/results" element={<Results />} />
           <Route path="/platforms" element={<Platforms />} />
+          <Route path="/schedules" element={<Schedules />} />
         </Routes>
       </main>
     </BrowserRouter>

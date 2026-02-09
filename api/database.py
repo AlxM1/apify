@@ -1,16 +1,18 @@
-"""SQLAlchemy async database setup with SQLite."""
+"""SQLAlchemy async database setup."""
 
 from pathlib import Path
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
-DB_PATH = Path(__file__).resolve().parent.parent / "data" / "apify.db"
-DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+from api.config import settings
 
-DATABASE_URL = f"sqlite+aiosqlite:///{DB_PATH}"
+# Ensure data dir exists for SQLite
+if "sqlite" in settings.database_url:
+    db_path = settings.database_url.split("///")[-1]
+    Path(db_path).parent.mkdir(parents=True, exist_ok=True)
 
-engine = create_async_engine(DATABASE_URL, echo=False)
+engine = create_async_engine(settings.database_url, echo=settings.debug)
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 

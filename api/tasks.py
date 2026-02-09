@@ -18,6 +18,34 @@ logger = logging.getLogger(__name__)
 _running_tasks: dict[int, asyncio.Task] = {}
 
 
+async def _notify(job_id: int, status: str):
+    """Send WebSocket broadcast and webhook notification for a job update."""
+    try:
+        from api.ws import manager
+        await manager.broadcast_job_update(job_id)
+    except Exception:
+        pass  # WS is best-effort
+
+    if status in ("completed", "failed"):
+        try:
+            from api.webhooks import notify_job_complete
+            async with async_session() as db:
+                job = await db.get(ScrapeJob, job_id)
+                if job:
+                    await notify_job_complete({
+                        "id": job.id,
+                        "platform": job.platform,
+                        "action": job.action,
+                        "target": job.target,
+                        "status": status,
+                        "result_count": job.result_count,
+                        "error": job.error,
+                        "duration_seconds": job.duration_seconds,
+                    })
+        except Exception:
+            pass  # Webhook is best-effort
+
+
 async def run_scrape_job(job_id: int) -> None:
     """Execute a scrape job in the background."""
     async with async_session() as db:
@@ -29,6 +57,8 @@ async def run_scrape_job(job_id: int) -> None:
         job.status = JobStatus.RUNNING
         job.started_at = datetime.utcnow()
         await db.commit()
+
+    await _notify(job_id, "running")
 
     scraper = None
     try:
@@ -75,6 +105,7 @@ async def run_scrape_job(job_id: int) -> None:
             await db.commit()
 
         logger.info(f"Job {job_id} completed: {len(results)} results")
+        await _notify(job_id, "completed")
 
     except asyncio.CancelledError:
         async with async_session() as db:
@@ -83,6 +114,7 @@ async def run_scrape_job(job_id: int) -> None:
             job.completed_at = datetime.utcnow()
             await db.commit()
         logger.info(f"Job {job_id} cancelled")
+        await _notify(job_id, "cancelled")
 
     except Exception as e:
         logger.error(f"Job {job_id} failed: {e}")
@@ -95,6 +127,7 @@ async def run_scrape_job(job_id: int) -> None:
             if job.started_at:
                 job.duration_seconds = (now - job.started_at).total_seconds()
             await db.commit()
+        await _notify(job_id, "failed")
 
     finally:
         if scraper:

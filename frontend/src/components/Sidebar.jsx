@@ -5,12 +5,14 @@ import {
   List,
   Database,
   Globe,
+  Clock,
 } from 'lucide-react';
 
 const links = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/scrape', icon: Play, label: 'New Scrape' },
   { to: '/jobs', icon: List, label: 'Jobs' },
+  { to: '/schedules', icon: Clock, label: 'Schedules' },
   { to: '/results', icon: Database, label: 'Results' },
   { to: '/platforms', icon: Globe, label: 'Platforms' },
 ];
